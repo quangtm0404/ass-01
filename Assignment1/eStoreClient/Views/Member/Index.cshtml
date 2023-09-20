@@ -1,0 +1,80 @@
+﻿@using eStoreClient.Models.Auth;
+
+@model IEnumerable<MemberDTO>
+<div class="card shadow border-0 mt-4">
+	<div class="card-header bg-secondary bg-gradient ml-0 py-3">
+		<div class="row">
+			<div class="col-12 text-center">
+				<h1 class="text-white">Members List</h1>
+			</div>
+		</div>
+	</div>
+	<div class="card-body p-4">
+		<div class="row pb-3">
+			<div class="col-6">
+			</div>
+			
+		</div>
+		<table class="table">
+			<thead>
+				<tr>
+					<th>
+						Id
+					</th>
+					<th>
+						Email
+					</th>
+					<th>
+						Company Name
+					</th>
+					<th>
+						City
+					</th>
+					<th>
+						Country
+					</th>
+					<th>
+						Role
+					</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (var item in Model)
+				{
+					<tr>
+						<td>
+							@item.Id
+						</td>
+						<td>
+							@item.Email
+						</td>
+						<td>
+							@item.CompanyName
+						</td>
+						<td>
+							@item.City
+						</td>
+						<td>
+							@item.Country
+						</td>
+						<td>
+							@item.RoleName
+						</td>
+						<td>
+							<a class="btn btn-success" asp-controller="Member" asp-action="Details" asp-route-id="@item.Id">
+								Details
+							</a>
+							
+							<a class="btn btn-danger" asp-controller="Member" asp-action="Delete" asp-route-id="@item.Id">
+								<i class="bi bi-trash"></i>
+							</a>
+						</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+
+	</div>
+
+</div>

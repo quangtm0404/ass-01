@@ -1,0 +1,52 @@
+﻿@using eStoreClient.Models.ProductDTO;
+
+@model ProductUpdateDTO
+
+<form method="post" asp-action="Update" asp-controller="Product">
+    <br />
+    <div class="container border p-3">
+        <h1 class="text-white text-center">Edit Product</h1>
+        <hr />
+        <input type="hidden" asp-for="Id" value="@Model.Id" />
+        <div class="row">
+            <div class="col-2">
+                <label class="control-label pt-2" style="font-size:20px;">Name</label>
+            </div>
+            <div class="col-10 pb-3">
+                <input class="form-control" asp-for="Name" value="@Model.Name" />
+            </div>
+
+            <div class="col-2">
+                <label class="control-label pt-2" style="font-size:20px;">Unit Price</label>
+            </div>
+            <div class="col-10 pb-3">
+                <input class="form-control" asp-for="UnitPrice" value="@Model.UnitPrice"/>
+            </div>
+            <div class="col-2">
+                <label class="control-label pt-2" style="font-size:20px;">Weight</label>
+            </div>
+            <div class="col-10 pb-3">
+                <input class="form-control" asp-for="Weight" value="@Model.Weight"/>
+            </div>
+            <div class="col-2">
+                <label class="control-label pt-2" style="font-size:20px;">Unit In Stock</label>
+            </div>
+            <div class="col-10 pb-3">
+                <input class="form-control" asp-for="UnitsInStock" value="@Model.UnitsInStock"/>
+            </div>
+            <div class="col-2">
+                <label class="control-label pt-2" style="font-size:20px;">Category</label>
+            </div>
+            <div class="col-10 pb-3">
+                <select asp-for="CategoryId" class="form-control" asp-items="ViewBag.CategoryId"></select>
+            </div>
+
+            
+            <div class="col-5 offset-2">
+                <input type="submit" class="btn btn-primary" value="Update" />
+                <a class="btn-primary btn form-control" asp-controller="Product" asp-action="Index">Back to List</a>
+            </div>
+
+        </div>
+    </div>
+</form>

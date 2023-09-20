@@ -1,0 +1,59 @@
+﻿@using eStoreClient.Models.Auth;
+
+
+@model UpdateMemberDTO
+
+<form method="post" asp-action="Profile" asp-controller="Member">
+    <br />
+    <div class="container border p-3">
+
+        <hr />
+        <input type="hidden" asp-for="Id" value="@Model.Id" />
+        <div class="row">
+            <div class="col-2">
+                <label class="control-label pt-2" style="font-size:20px;">Email</label>
+            </div>
+            <div class="col-10 pb-3">
+                <input class="form-control" asp-for="Email" value="@Model.Email" readonly/>
+            </div>
+
+            <div class="col-2">
+                <label class="control-label pt-2" style="font-size:20px;">Company Name</label>
+            </div>
+            <div class="col-10 pb-3">
+                <input class="form-control" asp-for="CompanyName" value="@Model.CompanyName"/>
+            </div>
+            <div class="col-2">
+                <label class="control-label pt-2" style="font-size:20px;">City</label>
+            </div>
+            <div class="col-10 pb-3">
+                <input class="form-control" asp-for="City" value="@Model.City"/>
+            </div>
+            <div class="col-2">
+                <label class="control-label pt-2" style="font-size:20px;">Country</label>
+            </div>
+            <div class="col-10 pb-3">
+                <input class="form-control" asp-for="Country" value="@Model.Country" />
+            </div>
+            <div class="col-2">
+                <label class="control-label pt-2" style="font-size:20px;">RoleName</label>
+            </div>
+            <div class="col-10 pb-3">
+                <input class="form-control" asp-for="RoleName" value="@Model.RoleName" disabled/>
+            </div>
+            <input type="hidden" value="@Model.Password" asp-for="Password" />
+
+
+            <div class="col-5 offset-2">
+
+                <input type="submit" class="btn btn-primary form-control" value="Update"/> 
+            </div>
+            <div class="col-5 offset-2">
+
+                <a class="btn-primary btn form-control" asp-controller="Home" asp-action="Index">Back</a>
+            </div>
+
+        </div>
+    </div>
+</form>
+

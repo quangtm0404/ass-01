@@ -1,0 +1,86 @@
+﻿@using eStoreClient.Models.OrderDTO;
+
+@model IEnumerable<OrderViewDTO>
+<div class="card shadow border-0 mt-4">
+	<div class="card-header bg-secondary bg-gradient ml-0 py-3">
+		<div class="row">
+			<div class="col-12 text-center">
+				<h1 class="text-white">Order List</h1>
+			</div>
+		</div>
+	</div>
+	<div class="card-body p-4">
+		<div class="row pb-3">
+			<div class="col-6">
+			</div>
+			<div class="col-6 text-end">
+				
+				<form method="post" asp-action="Filter" asp-controller="Order">
+					Start <input type="date" name="startDate" class="form-control" />  
+					End <input type="date" name="endDate" class="form-control" />  <br />
+
+					<input type="submit" value="Search" class="btn btn-primary" />
+				</form>
+			</div>
+		</div>
+		<table class="table">
+			<thead>
+				<tr>
+					<th>
+						Order Id
+					</th>
+					<th>
+						Order Date
+					</th>
+					<th>
+						RequiredDate
+					</th>
+					<th>
+						ShippedDate
+					</th>
+					<th>
+						Freight
+					</th>
+					<th>
+						MemberId
+					</th>
+					
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (var item in Model)
+				{
+					<tr>
+						<td>
+							@item.Id
+						</td>
+						<td>
+							@item.OrderDate.Date
+						</td>
+						<td>
+							@item.RequiredDate.Date
+						</td>
+						<td>
+							@item.ShippedDate.Date
+						</td>
+						<td>
+							@item.Freight
+						</td>
+						<td>
+							@item.MemberId
+						</td>
+						<td>
+							<a class="btn btn-success" asp-controller="Order" asp-action="Details" asp-route-id="@item.Id">
+								Details
+							</a>
+							
+						</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+
+	</div>
+
+</div>
