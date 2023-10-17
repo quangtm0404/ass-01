@@ -1,9 +1,11 @@
-﻿using FluentValidation;
+﻿using eStoreAPI.Services;
+using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Services.Commons;
+using Services.Services.Interfaces;
 using System.Text;
 using System.Text.Json.Serialization;
 
@@ -14,6 +16,10 @@ namespace eStoreAPI
 		public static IServiceCollection AddServices(this IServiceCollection services)
 		{
 			services.AddEndpointsApiExplorer();
+			services.AddScoped<IClaimsService, ClaimsService>();
+
+			services.AddRouting(opt => opt.LowercaseUrls = true);
+
 			services.AddSwaggerGen(opt =>
 			{
 				opt.AddSecurityDefinition(name: "Bearer", securityScheme: new OpenApiSecurityScheme

@@ -1,0 +1,48 @@
+﻿@using eStoreClient.Models.OrderDTO;
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@model OrderCreateDTO
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Product</th>
+            <th scope="col">Price</th>
+            <th scope="col">Quantity</th>
+            <th scope="col">Sub Total</th>
+            <th scope="col">Action</th>
+
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var cartItem in Model.OrderDetails)
+        {
+            <form method="post" asp-action="Update" asp-controller="Cart">
+            <tr>
+                <input type="hidden" value="@cartItem.ProductId" name="id"/>
+                <td>@cartItem.ProductName</td>
+                <td>@cartItem.UnitPrice.ToString()</td>
+                <td>
+                    <input type="number" value="@cartItem.Quantity" name="quantity"/>
+
+                </td>
+                <td>Sub Total: @(cartItem.UnitPrice * cartItem.Quantity) VND</td>
+                <td>
+                    <a asp-action="Remove" asp-route-id="@cartItem.ProductId">Remove</a>
+                    | <input type="submit" value="Update" />
+                </td>
+            </tr>
+            </form>
+
+        }
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="3">Total:</td>
+            <td>@Model.Total</td>
+        </tr>
+    </tfoot>
+</table>
+<a asp-action="CheckOut" asp-controller="Cart">Checkout</a>

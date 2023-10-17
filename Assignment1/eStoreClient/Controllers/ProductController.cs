@@ -1,9 +1,15 @@
 ﻿using Domains.Entities;
+using eStoreClient.Models.OrderDTO;
 using eStoreClient.Models.ProductDTO;
 using eStoreClient.Services.Interfaces;
+using eStoreClients.Models.OrderDetailDTO;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Caching.Memory;
 using Newtonsoft.Json;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace eStoreClient.Controllers
 {
@@ -11,19 +17,23 @@ namespace eStoreClient.Controllers
     {
         private readonly IProductService _productService;
         private readonly ICategoryService _categoryService;
-        public ProductController(IProductService _productService, ICategoryService categoryService)
+        private readonly IMemoryCache _memoryCache;
+        private readonly ITokenProvider _tokenProvider;
+        public ProductController(IProductService _productService, ICategoryService categoryService, IMemoryCache memoryCache, ITokenProvider tokenProvider)
         {
             this._productService = _productService;
             _categoryService = categoryService;
+            _tokenProvider = tokenProvider;
+            _memoryCache = memoryCache;
         }
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            var result = await _productService.GetAllProductsAsync();
-            if (result is not null && result.IsSuccess)
-            {
-                return View(JsonConvert.DeserializeObject<IEnumerable<ProductDTO>>(Convert.ToString(result.Result)!));
-            }
-            else if (result!.Message == "Not have any product")
+            //var result = await _productService.GetAllProductsAsync();
+            /*if (result is not null && result.IsSuccess)
+            {*/
+            return View();
+            //}
+            /*else if (result!.Message == "Not have any product")
             {
                 TempData["error"] = "Not have any product, must create!";
                 return RedirectToAction(nameof(Create));
@@ -32,9 +42,79 @@ namespace eStoreClient.Controllers
             {
                 TempData["error"] = result!.Message;
                 return RedirectToAction("Index", "Home");
-            }
+            }*/
         }
 
+        [Authorize]
+        [HttpGet]
+        public IActionResult AddToCart(Guid id, string name, double unitPrice)
+        {
+
+            var userId = User.FindFirstValue(JwtRegisteredClaimNames.Sub)!;
+            var cart = _memoryCache.Get<OrderCreateDTO>(userId);
+            if (cart is not null)
+            {
+                var isExisted = cart.OrderDetails.FirstOrDefault(x => x.ProductId == id);
+                if (isExisted is not null)
+                {
+                    // Da ton tai trong cart
+                    isExisted.Quantity += 1;
+                    double Total = 0;
+                    cart.OrderDetails.ToList().ForEach(x => { Total += x.Quantity * x.UnitPrice; });
+                    cart.Total = Total;
+                    _memoryCache.Set(userId, cart);
+
+                    TempData["success"] = $"Add {isExisted.ProductId} already exsited! Add quantity to 1";
+                    return RedirectToAction("Index", "Home");
+                }
+                else
+                {
+
+                    cart.OrderDetails.Add(new OrderDetailCreateDTO
+                    {
+                        ProductId = id,
+                        UnitPrice = unitPrice
+                    });
+                    double Total = 0;
+                    cart.OrderDetails.ToList().ForEach(x => { Total += x.Quantity * x.UnitPrice; });
+                    cart.Total = Total;
+                    _memoryCache.Set(userId, cart);
+                    TempData["success"] = $"Add to cart successfully!";
+                    return RedirectToAction("Index", "Home");
+                }
+
+            }
+            else
+            {
+                var cartDetails = new List<OrderDetailCreateDTO>();
+                cartDetails.Add(new OrderDetailCreateDTO
+                {
+                    ProductId = id,
+                    Quantity = 1,
+                    ProductName = name,
+                    Discount = 0,
+                    UnitPrice = unitPrice
+                });
+                double Total = 0;
+                cartDetails.ForEach(x => { Total += x.Quantity * x.UnitPrice; });
+                cart = new OrderCreateDTO
+                {
+                    MemberId = Guid.Parse(userId),
+                    OrderDetails = cartDetails,
+                    Total = Total
+                };
+
+                var memCacheOpt = new MemoryCacheEntryOptions
+                {
+                    AbsoluteExpiration = DateTime.Now.AddMinutes(120),
+                    SlidingExpiration = TimeSpan.FromMinutes(60)
+                };
+                _memoryCache.Set(userId, cart, memCacheOpt);
+                TempData["success"] = "Add To Cart Successfully!";
+            }
+            return RedirectToAction("Index", "Home");
+
+        }
         [HttpGet]
         public async Task<IActionResult> Create()
         {
@@ -50,7 +130,7 @@ namespace eStoreClient.Controllers
             if (!ModelState.IsValid)
             {
                 var result = JsonConvert.DeserializeObject<IEnumerable<Category>>(Convert.ToString((await _categoryService.GetCategories())!.Result)!);
-                ViewData["CategoryId"] = new SelectList(result, "CategoryId", "CategoryName");
+                ViewData["CategoryId"] = new SelectList(result, "Id", "Name");
                 TempData["error"] = "Validation failed!";
                 return View(model);
             }
@@ -59,9 +139,7 @@ namespace eStoreClient.Controllers
                 var result = await _productService.CreateProductAsync(model);
                 if (result is not null && result.IsSuccess)
                 {
-
                     TempData["success"] = "Create successfully!";
-
                     return RedirectToAction(nameof(Index), "Product");
 
 
@@ -69,7 +147,7 @@ namespace eStoreClient.Controllers
                 else
                 {
                     var category = JsonConvert.DeserializeObject<IEnumerable<Category>>(Convert.ToString((await _categoryService.GetCategories())!.Result)!);
-                    ViewData["CategoryId"] = new SelectList(category, "CategoryId", "CategoryName");
+                    ViewData["CategoryId"] = new SelectList(category, "Id", "Name");
                     TempData["error"] = "Create failed!";
                     return View(model);
                 }

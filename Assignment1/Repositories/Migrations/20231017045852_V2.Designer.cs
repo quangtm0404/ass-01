@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Repositories;
 
@@ -11,9 +12,11 @@ using Repositories;
 namespace Repositories.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231017045852_V2")]
+    partial class V2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -39,12 +42,12 @@ namespace Repositories.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("fe2c5ab3-f878-476d-bf6d-07193210e941"),
+                            Id = new Guid("5c53124b-5641-4c7a-961e-7a30da947e1c"),
                             Name = "Laptop"
                         },
                         new
                         {
-                            Id = new Guid("bc92090f-034a-4d23-91e2-3b65689e8e96"),
+                            Id = new Guid("6a599e78-f1bc-456b-b92a-47d00d9e064c"),
                             Name = "Phone"
                         });
                 });
@@ -86,7 +89,7 @@ namespace Repositories.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("3480903f-3f7c-42e7-b5e0-e450110ec548"),
+                            Id = new Guid("76422d2c-db36-4eb1-87f6-63d451604f64"),
                             City = "HoChiMinh",
                             CompanyName = "FPT",
                             Country = "VN",
@@ -138,10 +141,6 @@ namespace Repositories.Migrations
 
                     b.Property<Guid>("ProductId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("ProductName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Quantity")
                         .HasColumnType("int");

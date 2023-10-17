@@ -32,7 +32,7 @@ namespace eStoreClient.Services
 		public async Task<ResponseDTO?> GetOrderByDate(DateTime starteDate, DateTime endDate)
 		=> await _baseService.SendAsync(new RequestDTO
 		{
-			URL = $"{StaticDetail.eStoreAPIBase}/api/orders/filter?startDate={starteDate}&endDate={endDate}",
+			URL = $"{StaticDetail.eStoreAPIBase}/api/orders/statistic?startDate={starteDate}&endDate={endDate}",
 			APIType = StaticDetail.APIType.GET
 
 		});

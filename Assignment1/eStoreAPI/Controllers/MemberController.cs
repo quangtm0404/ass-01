@@ -17,7 +17,6 @@ namespace eStoreAPI.Controllers
 			_response = new();
 		}
 		[HttpGet]
-		[Authorize(Roles = "ADMIN")]
 		public IActionResult GetAll()
 		{
 			_response.Result = _memberService.GetMembers();

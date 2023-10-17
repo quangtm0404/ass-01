@@ -11,11 +11,7 @@
 			DELETE
 		}
 
-		public enum STATE
-		{
-			SUCCESS,
-			ERROR
-		}
+
 		public const string TOKEN_COOKIE = "JWTToken";
 	}
 }

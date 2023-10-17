@@ -19,7 +19,7 @@ namespace eStoreClient.Services
 			{
 				APIType = APIType.POST,
 				Data = loginRequestDTO,
-				URL = $"{StaticDetail.eStoreAPIBase}/api/auth/login"
+				URL = $"{StaticDetail.eStoreAPIBase}/api/auth"
 			}, withBearer: false);
 		}
 
@@ -29,7 +29,7 @@ namespace eStoreClient.Services
 			{
 				APIType = APIType.POST,
 				Data = model,
-				URL = $"{StaticDetail.eStoreAPIBase}/api/auth/register"
+				URL = $"{StaticDetail.eStoreAPIBase}/api/members"
 			});
 		}
 	}

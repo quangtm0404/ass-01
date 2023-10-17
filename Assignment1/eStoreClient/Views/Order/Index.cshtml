@@ -26,9 +26,7 @@
 		<table class="table">
 			<thead>
 				<tr>
-					<th>
-						Order Id
-					</th>
+
 					<th>
 						Order Date
 					</th>
@@ -41,9 +39,6 @@
 					<th>
 						Freight
 					</th>
-					<th>
-						MemberId
-					</th>
 					
 					<th></th>
 				</tr>
@@ -52,9 +47,6 @@
 				@foreach (var item in Model)
 				{
 					<tr>
-						<td>
-							@item.Id
-						</td>
 						<td>
 							@item.OrderDate.Date
 						</td>
@@ -66,9 +58,6 @@
 						</td>
 						<td>
 							@item.Freight
-						</td>
-						<td>
-							@item.MemberId
 						</td>
 						<td>
 							<a class="btn btn-success" asp-controller="Order" asp-action="Details" asp-route-id="@item.Id">

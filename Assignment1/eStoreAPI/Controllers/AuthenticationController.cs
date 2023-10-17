@@ -4,7 +4,7 @@ using Services.ViewModels;
 
 namespace eStoreAPI.Controllers
 {
-	[Route("api/auth")]
+	[Route("api")]
 	[ApiController]
 	public class AuthenticationController : ControllerBase
 	{
@@ -18,7 +18,7 @@ namespace eStoreAPI.Controllers
 			response = new();
 		}
 
-		[HttpPost("login")]
+		[HttpPost("auth")]
 		public IActionResult Login([FromBody] LoginMemberDTO model)
 		{
 			var result = _memberService.Login(model);
@@ -34,7 +34,7 @@ namespace eStoreAPI.Controllers
 			else throw new Exception("Login failed");
 		}
 
-		[HttpPost("register")]
+		[HttpPost("members")]
 		public IActionResult Register([FromBody] CreateMemberDTO model)
 		{
 			var result = _memberService.CreateMember(model);

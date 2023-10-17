@@ -39,42 +39,50 @@
 					<th></th>
 				</tr>
 			</thead>
-			<tbody>
-				@foreach (var item in Model)
-				{
-					<tr>
-						<td>
-							@item.Id
-						</td>
-						<td>
-							@item.Email
-						</td>
-						<td>
-							@item.CompanyName
-						</td>
-						<td>
-							@item.City
-						</td>
-						<td>
-							@item.Country
-						</td>
-						<td>
-							@item.RoleName
-						</td>
-						<td>
-							<a class="btn btn-success" asp-controller="Member" asp-action="Details" asp-route-id="@item.Id">
-								Details
-							</a>
-							
-							<a class="btn btn-danger" asp-controller="Member" asp-action="Delete" asp-route-id="@item.Id">
-								<i class="bi bi-trash"></i>
-							</a>
-						</td>
-					</tr>
-				}
+			<tbody id="member-table-body">
 			</tbody>
 		</table>
 
 	</div>
 
 </div>
+<script type="text/javascript">
+	$(document).ready(function () {
+		var token = GetToken('JWTToken');
+		
+		$.ajax({
+			url: 'http://localhost:5212/api/members', // Replace this with the actual route that returns JSON data
+			type: 'GET',
+			dataType: 'json',
+			success: function (data) {
+				console.log(data);
+				console.log(token);
+				var tableBody = $('#member-table-body');
+				tableBody.empty(); // Clear existing table row
+				$.each(data.result, function (index, item) {
+					console.log(item);
+					var row = $('<tr></tr>');
+					row.append('<td>' + item.id + '</td>');
+					row.append('<td>' + item.email + '</td>');
+					row.append('<td>' + item.companyName + '</td>');
+					row.append('<td>' + item.city + '</td>');
+					row.append('<td>' + item.country + '</td>');
+					row.append('<td>' + item.roleName + '</td>');
+					row.append('<td>' +
+						'<a class="btn btn-success" href="/Member/Details?id=' + item.id + '">Details</a>' +
+						'<a class="btn btn-danger" href="/Member/Delete?id=' + item.id + '"><i class="bi bi-trash"></i></a>' +
+						'</td>');
+
+					tableBody.append(row);
+				});
+			},
+			error: function (error) {
+				console.log('Error: ' + error.responseText);
+			}
+		});
+		function GetToken(name) {
+			var value = "; " + document.cookie;
+			var parts = value.split("; " + name + "=");
+			if (parts.length == 2) return parts.pop().split(";").shift();
+		}
+	});</script>

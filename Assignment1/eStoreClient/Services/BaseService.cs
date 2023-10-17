@@ -78,7 +78,7 @@ namespace eStoreClient.Services
                         var apiResponseDTO = JsonConvert.DeserializeObject<ResponseDTO>(apiContent);
                         return apiResponseDTO;
 
-
+ 
                 }
             }
             catch (Exception ex)
